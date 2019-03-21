@@ -1,19 +1,23 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
+    parser: 'babel-eslint',
     sourceType: 'module'
   },
   env: {
     browser: true,
     node: true
   },
-  extends: 'airbnb-base',
+  extends: [
+    'airbnb-base',
+    'plugin:vue/essential'
+  ],
   globals: {
     __static: true
   },
   plugins: [
-    'html'
+    'html',
+    'vue'
   ],
   'rules': {
     'global-require': 0,
