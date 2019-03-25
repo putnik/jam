@@ -1,4 +1,4 @@
-# jamsy
+# jam
 
 > XMPP client
 

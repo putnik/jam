@@ -1,15 +1,15 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <MainPage/>
 </template>
 
 <script>
+import MainPage from './components/MainPage';
+
 export default {
-  name: 'jamsy',
+  name: 'jam',
+  components: { MainPage },
 };
 </script>
 
 <style>
-  /* CSS */
 </style>
