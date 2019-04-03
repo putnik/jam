@@ -1,6 +1,6 @@
 {
   "name": "jam",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "XMPP client",
   "author": "Sergey Leschina <mail@putnik.tech>",
   "scripts": {
@@ -21,8 +21,11 @@
   },
   "main": "./dist/electron/main.js",
   "dependencies": {
+    "@babel/runtime": "^7.4.2",
+    "@xmpp/client": "^0.7.0",
     "axios": "^0.18.0",
     "element-ui": "^2.6.3",
+    "stanza": "^11.0.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -95,5 +98,14 @@
   },
   "license": "MIT",
   "productName": "jam",
-  "repository": "https://github.com/putnik/jam"
+  "repository": "https://github.com/putnik/jam",
+  "build": {
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "build/icons/icon.icns"
+    },
+    "win": {
+      "icon": "build/icons/icon.ico"
+    }
+  }
 }

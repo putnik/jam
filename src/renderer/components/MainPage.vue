@@ -1,27 +1,23 @@
 <template>
   <el-container id="wrapper">
     <el-aside width="250px">
-      <ContactList/>
+      <Profile/>
+      <Roster/>
     </el-aside>
     <el-container>
-      <el-main>
-        <MessageHistory/>
-      </el-main>
-      <el-footer height="56px">
-        <InputForm/>
-      </el-footer>
+      <Chat/>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import ContactList from './MainPage/ContactList';
-import InputForm from './MainPage/InputForm';
-import MessageHistory from './MainPage/MessageHistory';
+import Roster from './MainPage/Roster';
+import Chat from './MainPage/Chat';
+import Profile from './MainPage/Profile';
 
 export default {
   name: 'main-page',
-  components: { ContactList, InputForm, MessageHistory },
+  components: { Profile, Roster, Chat },
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link);
