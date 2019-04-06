@@ -1,16 +1,22 @@
 <template>
-  <el-timeline>
-    <el-timeline-item v-for="(message, messageIndex) in messages"
-                      :item="message"
-                      :index="messageIndex"
-                      :key="message.id"
-                      :timestamp="message.from.local + ' (' + message.time.toLocaleString() + ')'"
-                      :icon="('in' === message.type ? 'el-icon-arrow-down' : 'el-icon-arrow-up')"
-                      :type="('in' === message.type ? 'primary' : '')"
-                      placement="top">
-      <p>{{ message.text }}</p>
-    </el-timeline-item>
-  </el-timeline>
+  <main>
+    <el-row v-for="(message, messageIndex) in messages"
+            :class="`message-${message.type}`"
+            :item="message"
+            :index="messageIndex"
+            type="flex"
+            :justify="(message.type === 'in' ? 'start' : 'end')">
+      <el-col :xs="{span: 24}" :sm="{span: 18}" class="message-col">
+        <el-card shadow="never" class="message-card">
+          <div class="message-author">{{ message.from.local }}</div>
+          <div class="message-time">{{ message.time.toLocaleString() }}</div>
+          <div class="message-text" v-html="message.text" v-linkified></div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <div >
+    </div>
+  </main>
 </template>
 
 <script>
@@ -35,7 +41,48 @@ export default {
 </script>
 
 <style>
-  .el-timeline-item__tail {
-    border-left: 0;
+  .message-card {
+    display: inline-block;
+    text-align: left;
+  }
+
+  .message-author,
+  .message-time {
+    display: inline-block;
+    font-size: smaller;
+    color: #909090;
+  }
+
+  .message-author {
+    font-weight: bold;
+  }
+
+  .message-time:before {
+    content: '(';
+  }
+
+  .message-time:after {
+    content: ')';
+  }
+
+  .message-text {
+    margin-top: 8px;
+  }
+
+  .message-out .message-col {
+    text-align: right;
+  }
+
+  .message-in .message-card {
+    background: #f0f9eb;
+    border-color: #ddead6;
+  }
+
+  .message-out .message-card {
+    background: #f4f4f5;
+  }
+
+  .message-text a {
+    color: #399bff;
   }
 </style>

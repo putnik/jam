@@ -3,7 +3,7 @@
     <el-header>
       <Info :jid="jid"/>
     </el-header>
-    <el-main>
+    <el-main class="chat-main">
       <Messages :jid="jid"/>
     </el-main>
     <el-footer height="56px">
@@ -31,5 +31,7 @@ export default {
 </script>
 
 <style>
-
+  .chat-main {
+    border-top: 1px solid #e6e6e6;
+  }
 </style>
