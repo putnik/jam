@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       jid: 'work@xmpp.putnik.tech',
-    }
+    };
   },
   methods: {
   },

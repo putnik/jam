@@ -1,7 +1,7 @@
 {
   "name": "jam",
-  "version": "0.1.0",
-  "description": "XMPP client",
+  "version": "0.2.0",
+  "description": "Modern XMPP client",
   "author": "Sergey Leschina <mail@putnik.tech>",
   "scripts": {
     "build": "node .electron-vue/build.js",
@@ -24,6 +24,7 @@
     "@babel/runtime": "^7.4.2",
     "@xmpp/client": "^0.7.0",
     "axios": "^0.18.0",
+    "electron-db": "^0.10.2",
     "element-ui": "^2.6.3",
     "stanza": "^11.0.1",
     "vue": "^2.5.16",

@@ -15,8 +15,6 @@
             size="mini">
           {{group}}
         </el-tag>
-        <el-badge v-if="" class="mark" type="primary"
-                  :value="contact.unreadCount" :max="99"/>
         <el-badge v-if="contact.unreadCount" class="mark" type="primary"
                   :value="contact.unreadCount" :max="99"/>
       </el-menu-item>
@@ -35,15 +33,15 @@ export default {
     },
   },
   computed: {
-    contacts () {
-      let contacts = {};
+    contacts() {
+      const contacts = {};
 
       if (undefined !== this.$store.state.xmpp.roster) {
-        this.$store.state.xmpp.roster.forEach(function (item) {
-          let contact = {
+        this.$store.state.xmpp.roster.forEach((item) => {
+          const contact = {
             jid: item.jid.toString(),
             name: item.name,
-            status: 'online',
+            status: 'offline',
             unreadCount: 0,
             groups: item.groups,
           };

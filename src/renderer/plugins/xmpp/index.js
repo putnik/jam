@@ -1,37 +1,13 @@
 const stanza = require('stanza');
 
-function Xmpp (Vue, store) {
-  let xmpp = this;
+function Xmpp(Vue, store) {
+  const xmpp = this;
   let client;
-  let root = new Vue();
-
-  const log = (name, data) => {
-    if (0 === name.search('raw:')) {
-      return;
-    }
-
-    let message;
-    if (typeof data === 'string') {
-      message = data;
-    } else if (name === 'connected' || name === 'disconnected') {
-      message = 'Client instance: ' + JSON.stringify(data.config, null, '  ');
-    } else {
-      message = JSON.stringify(data, null, '  ');
-    }
-
-    console.log(name, message);
-
-    // root.$notify.info({
-    //   title: name,
-    //   message: message,
-    //   duration: -1,
-    // });
-  };
 
   this.addMessage = (contactJid, message, timestamp) => {
     contactJid = contactJid.toString();
     if (undefined === store.state.xmpp.messages[contactJid]) {
-      store.state.xmpp.messages[contactJid] || {};
+      store.state.xmpp.messages[contactJid] = {};
     }
 
     store.state.xmpp.messages[contactJid][message.id] = {
@@ -45,27 +21,26 @@ function Xmpp (Vue, store) {
       text: message.body,
       time: timestamp,
     };
-
-    console.log(store.state.xmpp.messages[contactJid]);
   };
 
-  this.connect = (jid, password) => {
+  this.connect = (jid, password, transport, url) => {
     client = stanza.createClient({
       softwareVersion: store.state.xmpp.software,
-      jid: jid,
-      password: password,
+      jid,
+      password,
 
-      // If you have a .well-known/host-meta.json file for your
-      // domain, the connection transport config can be skipped.
-
-      // transport: 'websocket',
-      transport: 'bosh',
-      // wsURL: 'ws://xmpp.putnik.tech:5280/xmpp-websocket',
-      boshURL: 'http://xmpp.putnik.tech:5280/http-bind',
+      transport,
+      wsURL: url,
+      boshURL: url,
     });
 
     client.on('session:started', () => {
       store.state.xmpp.status = 'connected';
+      store.state.xmpp.jid = jid;
+      store.state.xmpp.password = password;
+      store.state.xmpp.transport = transport;
+      store.state.xmpp.url = url;
+
       client.getRoster(() => {
         client.updateCaps();
         client.sendPresence({
@@ -75,14 +50,16 @@ function Xmpp (Vue, store) {
       });
     });
 
-    client.on('*', log);
-    client.on('iq', function (data) {
-      if ('result' === data.type && undefined !== data.roster && undefined !== data.roster.items && '' !== data.to) {
+    client.on('session:end', () => {
+      store.state.xmpp.status = 'disconnected';
+    });
+
+    client.on('iq', (data) => {
+      if (data.type === 'result' && undefined !== data.roster && undefined !== data.roster.items && data.to !== '') {
         store.state.xmpp.roster = data.roster.items;
       }
     });
-    client.on('message:sent', function (data) {
-      console.log(data.to);
+    client.on('message:sent', (data) => {
       xmpp.addMessage(data.to, data, Date.now());
     });
     client.connect();
@@ -91,8 +68,8 @@ function Xmpp (Vue, store) {
   this.send = (to, message) => {
     client.sendMessage({
       from: store.state.xmpp.jid,
-      to: to,
-      body: message
+      to,
+      body: message,
     });
   };
 
@@ -106,12 +83,12 @@ function Xmpp (Vue, store) {
       with: contactJid,
       rsm: {
         max: 50,
-        before: true
-      }
-    }, function(err, res) {
+        before: true,
+      },
+    }, (err, res) => {
       store.state.xmpp.messages = {};
-      if (undefined !== res && 'result' === res.type && undefined !== res.mamResult && undefined !== res.mamResult.items) {
-        res.mamResult.items.forEach(function(item) {
+      if (undefined !== res && res.type === 'result' && undefined !== res.mamResult && undefined !== res.mamResult.items) {
+        res.mamResult.items.forEach((item) => {
           xmpp.addMessage(contactJid, item.forwarded.message, item.forwarded.delay.stamp);
         });
       }
@@ -120,7 +97,7 @@ function Xmpp (Vue, store) {
 }
 
 export default {
-  install (Vue, options) {
+  install(Vue, options) {
     Vue.prototype.$xmpp = new Xmpp(Vue, options.store);
   },
 };

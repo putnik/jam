@@ -8,6 +8,7 @@ import locale from 'element-ui/lib/locale/lang/en';
 import App from './App';
 import router from './router';
 import XmppPlugin from './plugins/xmpp';
+import DbPlugin from './plugins/db';
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 
@@ -15,7 +16,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     xmpp: {
-      jid: 'me@xmpp.putnik.tech',
+      jid: '',
       password: '',
       status: 'disconnected',
       roster: [],
@@ -32,20 +33,30 @@ const store = new Vuex.Store({
 
 Vue.use(Element, { locale });
 Vue.use(XmppPlugin, { store });
+Vue.use(DbPlugin);
 
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
-let v = new Vue({
+const v = new Vue({
   components: { App },
   router,
   store,
   template: '<App/>',
 }).$mount('#app');
 
-if (v.$store.state.xmpp.jid && v.$store.state.xmpp.password) {
-  v.$xmpp.connect(v.$store.state.xmpp.jid, v.$store.state.xmpp.password)
+if (v.$db.getConfig('jid')
+  && v.$db.getConfig('password')
+  && v.$db.getConfig('transport')
+  && v.$db.getConfig('url')
+) {
+  v.$xmpp.connect(
+    v.$db.getConfig('jid'),
+    v.$db.getConfig('password'),
+    v.$db.getConfig('transport'),
+    v.$db.getConfig('url'),
+  );
 } else {
   v.$router.push({
     name: 'settings',

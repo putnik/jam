@@ -32,6 +32,9 @@ export default {
       });
     },
     handleLogoutClick() {
+      this.$store.state.xmpp.password = null;
+      this.$db.deleteConfig('password');
+
       this.$router.push({
         name: 'settings',
         params: {},
@@ -44,13 +47,13 @@ export default {
     };
   },
   computed: {
-    iconClass () {
-      if ('connected' === this.$store.state.xmpp.status) {
+    iconClass() {
+      if (this.$store.state.xmpp.status === 'connected') {
         return 'el-icon-success';
       }
       return 'el-icon-close-outline';
     },
-    username () {
+    username() {
       return this.$store.state.xmpp.jid || 'Not configured';
     },
   },

@@ -19,16 +19,16 @@ export default {
     contactJid() {
       return this.$store.state.xmpp.contactJid || '';
     },
-    messages () {
-      let contactJid = this.$store.state.xmpp.contactJid;
-      if (null === contactJid) {
+    messages() {
+      const { contactJid } = this.$store.state.xmpp;
+      if (contactJid === null) {
         return {};
       }
       return this.$store.state.xmpp.messages[contactJid];
     },
   },
-  updated () {
-    let elem = this.$el;
+  updated() {
+    const elem = this.$el;
     elem.scrollTop = elem.clientHeight;
   },
 };

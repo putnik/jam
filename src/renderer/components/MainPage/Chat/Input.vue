@@ -1,7 +1,8 @@
 <template>
   <div id="input-form">
     <el-form>
-      <el-input v-model="message" @keyup.13.native="handleSend" placeholder="Please enter your message" class="input-with-select">
+      <el-input v-model="message" @keyup.13.native="handleSend" class="input-with-select"
+                placeholder="Please enter your message">
         <el-select slot="prepend" placeholder="Attach" value="">
           <el-option label="Image" value="image" :disabled="isDisabled">
             <i class="el-icon-picture" style="margin-right:6px"></i> Image
@@ -31,8 +32,8 @@ export default {
       return this.$store.state.xmpp.contactJid;
     },
     isDisabled() {
-      return null === this.contactJid;
-    }
+      return this.contactJid === null;
+    },
   },
   methods: {
     handleSend() {
