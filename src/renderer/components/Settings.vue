@@ -37,7 +37,7 @@
             </el-collapse-item>
           </el-collapse>
           <el-form-item class="settings-buttons">
-            <el-button type="primary" @click="handleConnect">Connect</el-button>
+            <el-button type="success" @click="handleConnect">Connect</el-button>
             <el-button @click="handleCancel">Cancel</el-button>
           </el-form-item>
         </el-form>
