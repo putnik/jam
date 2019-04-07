@@ -1,20 +1,27 @@
 <template>
   <main>
-    <el-row v-for="(message, messageIndex) in messages"
-            :class="`message-${message.type}`"
-            :item="message"
-            :index="messageIndex"
-            type="flex"
-            :justify="(message.type === 'in' ? 'start' : 'end')">
-      <el-col :xs="{span: 24}" :sm="{span: 18}" class="message-col">
-        <el-card shadow="never" class="message-card">
-          <div class="message-author">{{ message.from.local }}</div>
-          <div class="message-time">{{ message.time.toLocaleString() }}</div>
-          <div class="message-text" v-html="message.text" v-linkified></div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <div >
+    <div v-for="(message, messageIndex) in messages"
+         :class="`message-${message.type}`"
+         :item="message"
+         :index="messageIndex">
+      <el-row v-if="message.newDate" type="flex" justify="center">
+        <el-col :xs="{span: 12}" :sm="{span: 6}">
+          <el-alert type="info" center :closable="false" :title="message.newDate"/>
+        </el-col>
+      </el-row>
+      <el-row type="flex" :justify="(message.type === 'in' ? 'start' : 'end')">
+        <el-col :xs="{span: 24}" :sm="{span: 18}" class="message-col">
+          <div class="message-block">
+            <div class="message-info">
+              <div class="message-author">{{ message.from.local }}</div>
+              <div class="message-time">{{ message.time.toLocaleTimeString() }}</div>
+            </div>
+            <el-card shadow="never" class="message-card">
+              <div class="message-text" v-html="message.text" v-linkified></div>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </main>
 </template>
@@ -27,10 +34,23 @@ export default {
     },
     messages() {
       const { contactJid } = this.$store.state.xmpp;
-      if (contactJid === null) {
+      if (contactJid === null || undefined === this.$store.state.xmpp.messages[contactJid]) {
         return {};
       }
-      return this.$store.state.xmpp.messages[contactJid];
+      let messages = this.$store.state.xmpp.messages[contactJid];
+      let lastDate = null;
+      for (let messageIndex in messages) {
+        if (messages.hasOwnProperty(messageIndex) === false) {
+          continue;
+        }
+        const date = messages[messageIndex].time.toLocaleDateString();
+        if (date !== lastDate) {
+          lastDate = date;
+          messages[messageIndex].newDate = date;
+        }
+      }
+
+      return messages;
     },
   },
   updated() {
@@ -41,32 +61,35 @@ export default {
 </script>
 
 <style>
-  .message-card {
+  .message-block {
     display: inline-block;
+  }
+
+  .message-card {
     text-align: left;
+  }
+
+  .message-info {
+    text-align: left;
+    margin-top: .5em;
+    margin-bottom: .1em;
+    color: #909090;
   }
 
   .message-author,
   .message-time {
     display: inline-block;
-    font-size: smaller;
-    color: #909090;
   }
 
   .message-author {
     font-weight: bold;
+    margin-right: .25em;
   }
 
-  .message-time:before {
-    content: '(';
-  }
-
-  .message-time:after {
-    content: ')';
-  }
-
-  .message-text {
-    margin-top: 8px;
+  .message-time {
+    float: right;
+    font-size: .75em;
+    padding-top: 3px;
   }
 
   .message-out .message-col {
@@ -75,11 +98,10 @@ export default {
 
   .message-in .message-card {
     background: #f0f9eb;
-    border-color: #ddead6;
   }
 
   .message-out .message-card {
-    background: #f4f4f5;
+    background: #ecf5ff;
   }
 
   .message-text a {
