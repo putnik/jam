@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <el-main>
     <div v-for="(message, messageIndex) in messages"
          :class="`message-${message.type}`"
          :item="message"
@@ -16,14 +16,14 @@
               <div class="message-author">{{ message.from.local }}</div>
               <div class="message-time">{{ message.time.toLocaleTimeString() }}</div>
             </div>
-            <el-card shadow="never" class="message-card">
+            <el-card shadow="never" class="message-card" :body-style="{ padding: '12px 16px' }">
               <div class="message-text" v-html="message.text" v-linkified></div>
             </el-card>
           </div>
         </el-col>
       </el-row>
     </div>
-  </main>
+  </el-main>
 </template>
 
 <script>
@@ -34,10 +34,10 @@ export default {
     },
     messages() {
       const { contactJid } = this.$store.state.xmpp;
-      if (contactJid === null || undefined === this.$store.state.xmpp.messages[contactJid]) {
+      if (contactJid === null || undefined === this.$store.state.xmpp.activeMessages) {
         return {};
       }
-      let messages = this.$store.state.xmpp.messages[contactJid];
+      let messages = this.$store.state.xmpp.activeMessages;
       let lastDate = null;
       for (let messageIndex in messages) {
         if (messages.hasOwnProperty(messageIndex) === false) {
@@ -55,7 +55,7 @@ export default {
   },
   updated() {
     const elem = this.$el;
-    elem.scrollTop = elem.clientHeight;
+    elem.scrollTop = elem.scrollHeight;
   },
 };
 </script>
@@ -83,7 +83,7 @@ export default {
 
   .message-author {
     font-weight: bold;
-    margin-right: .25em;
+    margin-right: .5em;
   }
 
   .message-time {

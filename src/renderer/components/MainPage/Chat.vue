@@ -3,10 +3,8 @@
     <el-header>
       <Info :jid="jid"/>
     </el-header>
-    <el-main class="chat-main">
-      <Messages :jid="jid"/>
-    </el-main>
-    <el-footer height="56px">
+    <Messages :jid="jid" class="chat-main" />
+    <el-footer class="chat-footer">
       <Input :jid="jid"/>
     </el-footer>
   </el-container>
@@ -25,13 +23,16 @@ export default {
       jid: 'work@xmpp.putnik.tech',
     };
   },
-  methods: {
-  },
 };
 </script>
 
 <style>
   .chat-main {
     border-top: 1px solid #e6e6e6;
+  }
+
+  .chat-footer {
+    height: 56px;
+    padding-top:8px;
   }
 </style>

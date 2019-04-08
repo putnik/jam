@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="roster-wrapper">
     <el-menu>
       <el-menu-item v-for="(contact, contactIndex) in contacts"
                     :item="contact"
@@ -56,4 +56,15 @@ export default {
 </script>
 
 <style>
+  .roster-wrapper .el-menu-item {
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  .roster-wrapper .el-menu-item.is-active {
+    background: #f4f4f5;
+  }
+
+  .roster-wrapper .el-menu-item.is-active:hover {
+    background: #ecf5ff;
+  }
 </style>

@@ -4,13 +4,10 @@ function Xmpp(Vue, store) {
   const xmpp = this;
   let client;
 
-  this.addMessage = (contactJid, message, timestamp) => {
+  this.addMessage = (contactJid, message, timestamp, skipActive) => {
     contactJid = contactJid.toString();
-    if (undefined === store.state.xmpp.messages[contactJid]) {
-      store.state.xmpp.messages[contactJid] = {};
-    }
-
-    store.state.xmpp.messages[contactJid][message.id] = {
+    contactJid = contactJid.replace(/\/.+$/, '');
+    message = {
       id: message.id,
       type: message.from.bare === store.state.xmpp.jid ? 'out' : 'in',
       from: {
@@ -21,6 +18,15 @@ function Xmpp(Vue, store) {
       text: message.body,
       time: timestamp,
     };
+
+    if (undefined === store.state.xmpp.messages[contactJid]) {
+      store.state.xmpp.messages[contactJid] = {};
+    }
+    Vue.set(store.state.xmpp.messages[contactJid], message.id, message);
+
+    if (skipActive !== true && contactJid === store.state.xmpp.contactJid) {
+      Vue.set(store.state.xmpp.activeMessages, message.id, message);
+    }
   };
 
   this.connect = (jid, password, transport, url) => {
@@ -59,9 +65,19 @@ function Xmpp(Vue, store) {
         store.state.xmpp.roster = data.roster.items;
       }
     });
-    client.on('message:sent', (data) => {
-      xmpp.addMessage(data.to, data, Date.now());
+
+    client.on('message', (data) => {
+      if (data.body !== undefined) {
+        xmpp.addMessage(data.from, data, new Date());
+      }
     });
+
+    client.on('message:sent', (data) => {
+      if (data.body !== undefined) {
+        xmpp.addMessage(data.to, data, new Date());
+      }
+    });
+
     client.connect();
   };
 
@@ -76,6 +92,7 @@ function Xmpp(Vue, store) {
   this.openContact = (contactJid) => {
     store.state.xmpp.contactJid = contactJid;
     if (undefined !== store.state.xmpp.messages[contactJid]) {
+      store.state.xmpp.activeMessages = store.state.xmpp.messages[contactJid];
       return;
     }
 
@@ -86,11 +103,12 @@ function Xmpp(Vue, store) {
         before: true,
       },
     }, (err, res) => {
-      store.state.xmpp.messages = {};
+      store.state.xmpp.activeMessages = {};
       if (undefined !== res && res.type === 'result' && undefined !== res.mamResult && undefined !== res.mamResult.items) {
         res.mamResult.items.forEach((item) => {
-          xmpp.addMessage(contactJid, item.forwarded.message, item.forwarded.delay.stamp);
+          xmpp.addMessage(contactJid, item.forwarded.message, item.forwarded.delay.stamp, true);
         });
+        store.state.xmpp.activeMessages = store.state.xmpp.messages[contactJid];
       }
     });
   };

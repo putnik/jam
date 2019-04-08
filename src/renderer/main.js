@@ -25,6 +25,7 @@ const store = new Vuex.Store({
       roster: [],
       contactJid: null,
       messages: {},
+      activeMessages: {},
       software: {
         name: process.env.npm_package_name,
         version: process.env.npm_package_version,
