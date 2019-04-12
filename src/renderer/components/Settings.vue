@@ -1,49 +1,64 @@
 <template>
-  <el-row class="settings-wrapper" :glitter="20" justify="center" align="middle">
-    <el-col :span="10" :offset="7">
-      <el-card class="settings-card">
-        <div slot="header" class="clearfix">
+  <div class="ui two column centered grid settings-wrapper">
+    <div class="column">
+      <div class="ui segment settings-card">
+        <div class="ui middle horizontal divider header">
+          <i class="plug icon"></i>
           Connection settings
         </div>
-        <el-form label-width="80px" >
-          <el-form-item label="Username">
-            <el-input v-model="jid" placeholder="username@xmpp.example.com"/>
-          </el-form-item>
-          <el-form-item label="Password">
-            <el-input v-model="password" type="password"/>
-          </el-form-item>
-          <el-collapse>
-            <el-collapse-item title="Additional settings">
-              <el-form-item label="Port">
-                <el-input-number v-model="port" size="small" controls-position="right"
-                                 :min="1" :max="65535"/>
-              </el-form-item>
-              <el-form-item label="Transport">
-                <el-col :span="13">
-                  <el-radio-group v-model="transport" size="small">
-                    <el-radio-button label="websocket" border>WebSocket</el-radio-button>
-                    <el-radio-button label="bosh" border>BOSH</el-radio-button>
-                  </el-radio-group>
-                </el-col>
-                <el-col :span="9">
-                  <el-form-item label="SSL" :span="9">
-                    <el-switch v-model="ssl"/>
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="URL">
-                <el-input v-model="url" size="small" placeholder="http://xmpp.example.com/http-bind" disabled/>
-              </el-form-item>
-            </el-collapse-item>
-          </el-collapse>
-          <el-form-item class="settings-buttons">
-            <el-button type="success" @click="handleConnect">Connect</el-button>
-            <el-button @click="handleCancel">Cancel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-    </el-col>
-  </el-row>
+        <div class="ui form">
+          <div class="field">
+            <label>Username</label>
+            <input v-model="jid" placeholder="username@xmpp.example.com">
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input v-model="password" type="password">
+          </div>
+          <div class="ui fluid accordion settings-extra">
+            <div class="title active">
+              <i class="dropdown icon"></i>
+              Additional settings
+            </div>
+            <div class="content active">
+              <div class="field">
+                <div class="fields">
+                  <div class="ten wide field">
+                    <label>Transport</label>
+                    <div class="ui fluid search selection dropdown">
+                      <input type="hidden" v-model="transport">
+                      <i class="dropdown icon"></i>
+                      <div class="default text">Select transport</div>
+                      <div class="menu">
+                        <div class="item" data-value="websocket">BOSH</div>
+                        <div class="item" data-value="bosh">WebSocket</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="six wide field">
+                    <label>Port</label>
+                    <input v-model="port" type="number">
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui toggle checkbox">
+                  <input v-model="ssl" type="checkbox">
+                  <label>SSL</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>URL</label>
+            <input v-model="url" placeholder="http://xmpp.example.com/http-bind" disabled>
+          </div>
+          <button class="ui positive button" @click="handleConnect">Connect</button>
+          <button class="ui secondary basic button" @click="handleCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -155,11 +170,11 @@ export default {
 
 <style>
   .settings-card {
-    margin-top: 10%;
+    margin-top: 10% !important;
   }
-  .settings-card .el-card__body,
-  .settings-card .el-collapse-item__content {
-    padding-bottom: 0;
+
+  .settings-extra {
+    margin-bottom: 20px;
   }
 
   .settings-buttons {

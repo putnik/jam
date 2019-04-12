@@ -1,80 +1,64 @@
 <template>
-  <main @mousemove="handleMouseMove" @mouseup="handleMouseUp">
-    <el-container class="mainpage-wrapper">
-      <el-aside :width="asideWidth" class="mainpage-aside">
-        <Profile/>
-        <Roster/>
-        <div class="mainpage-aside-drag" @mousedown="handleMouseDown"></div>
-      </el-aside>
-      <el-container>
-        <Chat/>
-      </el-container>
-    </el-container>
-  </main>
+  <div class="ui grid mainpage-wrapper">
+    <div class="ui four wide column mainpage-aside">
+      <Roster/>
+      <Profile/>
+    </div>
+    <main class="ui twelve wide column mainpage-content">
+      <header class="ui borderless top fixed menu mainpage-header">
+        <Info/>
+      </header>
+      <Messages/>
+      <footer class="ui borderless bottom fixed menu mainpage-footer">
+        <div class="item mainpage-inputfield-wrapper">
+          <InputField/>
+        </div>
+      </footer>
+    </main>
+  </div>
 </template>
 
 <script>
-import Roster from './MainPage/Roster';
-import Chat from './MainPage/Chat';
+import Info from './MainPage/Info';
+import InputField from './MainPage/InputField';
+import Messages from './MainPage/Messages';
 import Profile from './MainPage/Profile';
+import Roster from './MainPage/Roster';
 
 export default {
   name: 'main-page',
-  components: { Profile, Roster, Chat },
-  data() {
-    return {
-      isResizing: false,
-      asideWidth: '350px',
-    };
-  },
-  created() {
-    this.asideWidth = this.$db.getConfig('asideWidth');
-  },
-  methods: {
-    open(link) {
-      this.$electron.shell.openExternal(link);
-    },
-    handleMouseDown() {
-      this.isResizing = true;
-    },
-    handleMouseMove(event) {
-      if (!this.isResizing) {
-        return;
-      }
-      let width = event.clientX + 1;
-      width = Math.max(width, 200);
-      width = Math.min(width, 400);
-      this.asideWidth = `${width}px`;
-    },
-    handleMouseUp() {
-      this.isResizing = false;
-      this.$db.setConfig('asideWidth', this.asideWidth);
-    },
+  components: {
+    Info, InputField, Messages, Profile, Roster,
   },
 };
 </script>
 
 <style>
-  .mainpage-wrapper {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+.mainpage-wrapper {
+  height: 100%;
+  overflow: hidden;
+  margin: 0 !important;
+}
 
-  .mainpage-aside {
-    position: relative;
-    overflow-x: hidden;
-  }
+.mainpage-aside {
+  padding: 0 !important;
+  border: 0 !important;
+}
 
-  .mainpage-aside-drag {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 2px;
-    background: #e6e6e6;
-    cursor: ew-resize
-  }
+.mainpage-content {
+  position: relative !important;
+  padding: 62px 0 62px 15px !important;
+}
+
+.mainpage-header,
+.mainpage-footer {
+  position: absolute !important;
+  height: 62px;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.mainpage-inputfield-wrapper {
+  width: 100% !important;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <el-menu class="el-menu-demo" mode="horizontal">
-    <el-menu-item>{{ contactJid }}</el-menu-item>
-  </el-menu>
+  <div class="ui item">
+    {{ contactJid }}
+  </div>
 </template>
 
 <script>
@@ -16,5 +16,4 @@ export default {
 </script>
 
 <style>
-
 </style>

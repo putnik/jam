@@ -5,11 +5,13 @@
 </template>
 
 <script>
-
 export default {
   name: 'jam',
 };
 </script>
 
 <style>
+  #app {
+    height: 100%;
+  }
 </style>

@@ -2,10 +2,10 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import linkify from 'vue-linkify';
-import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 
-import locale from 'element-ui/lib/locale/lang/en';
+import 'semantic-css';
+import 'semantic-js';
+
 import App from './App';
 import router from './router';
 import XmppPlugin from './plugins/xmpp';
@@ -35,7 +35,6 @@ const store = new Vuex.Store({
   },
 });
 
-Vue.use(Element, { locale });
 Vue.use(XmppPlugin, { store });
 Vue.use(DbPlugin);
 

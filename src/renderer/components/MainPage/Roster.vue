@@ -1,25 +1,23 @@
 <template>
-  <main class="roster-wrapper">
-    <el-menu>
-      <el-menu-item v-for="(contact, contactIndex) in contacts"
-                    :item="contact"
-                    :index="contactIndex"
-                    :key="contact.jid"
-                    @click="handleClick">
-        <i v-if="'online' === contact.status" class="el-icon-circle-check"></i>
-        <i v-else class="el-icon-circle-close-outline"></i>
-        {{ contact.name }}
-        <el-tag
-            v-for="group in contact.groups"
-            :key="group"
-            size="mini">
-          {{group}}
-        </el-tag>
-        <el-badge v-if="contact.unreadCount" class="mark" type="primary"
-                  :value="contact.unreadCount" :max="99"/>
-      </el-menu-item>
-    </el-menu>
-  </main>
+  <div class="ui fluid vertical menu roster-wrapper">
+    <div class="item">
+      <div class="ui icon input">
+        <input type="text" placeholder="Search people...">
+        <i class="search icon"></i>
+      </div>
+    </div>
+    <a class="grey item" v-for="(contact, contactIndex) in contacts"
+       :item="contact"
+       :index="contactIndex"
+       :key="contact.jid"
+       :data-jid="contact.jid"
+       @click="handleClick">
+      {{ contact.name }}
+      <div class="ui label" v-if="contact.unreadCount">
+        {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
+      </div>
+    </a>
+  </div>
 </template>
 
 <script>
@@ -29,7 +27,7 @@ export default {
       this.$electron.shell.openExternal(link);
     },
     handleClick(event) {
-      this.$xmpp.openContact(event.$options.propsData.index);
+      this.$xmpp.openContact(event.target.dataset.jid);
     },
   },
   computed: {
@@ -56,15 +54,9 @@ export default {
 </script>
 
 <style>
-  .roster-wrapper .el-menu-item {
-    border-bottom: 1px solid #e6e6e6;
-  }
-
-  .roster-wrapper .el-menu-item.is-active {
-    background: #f4f4f5;
-  }
-
-  .roster-wrapper .el-menu-item.is-active:hover {
-    background: #ecf5ff;
+  .roster-wrapper {
+    height: 100%;
+    border-radius: 0 !important;
+    border: 0 !important;
   }
 </style>
