@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'; // eslint-disable-line
+import { app, BrowserWindow, Menu } from 'electron'; // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -28,6 +28,8 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  Menu.setApplicationMenu(null);
 }
 
 app.on('ready', createWindow);
