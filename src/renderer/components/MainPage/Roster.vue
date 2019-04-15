@@ -6,19 +6,21 @@
         <i class="search icon"></i>
       </div>
     </div>
-    <a :class="`${contact.jid === contactJid ? 'active' : ''} item roster-item`"
-       v-for="(contact, contactIndex) in contacts"
-       :item="contact"
-       :index="contactIndex"
-       :key="contact.jid"
-       :data-jid="contact.jid"
-       @click="handleClick">
-      <Avatar class="ui image roster-item-image" :username="contact.name" :size="30"/>
-      <span class="roster-item-name">{{ contact.name }}</span>
-      <div class="ui label" v-if="contact.unreadCount">
-        {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
-      </div>
-    </a>
+    <div class="roster-contacts">
+      <a :class="`${contact.jid === contactJid ? 'active' : ''} item roster-item`"
+         v-for="(contact, contactIndex) in contacts"
+         :item="contact"
+         :index="contactIndex"
+         :key="contact.jid"
+         :data-jid="contact.jid"
+         @click="handleClick">
+        <Avatar class="ui avatar image roster-item-image" :username="contact.name" :size="30"/>
+        <span class="roster-item-name">{{ contact.name }}</span>
+        <div class="ui label" v-if="contact.unreadCount">
+          {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
+        </div>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -94,6 +96,14 @@ export default {
     border: 0 !important;
   }
 
+  .roster-contacts {
+    position: absolute;
+    top: 61px;
+    bottom: 61px;
+    width: 100%;
+    overflow-y: scroll;
+  }
+
   .roster-item {
     overflow: hidden;
   }
@@ -108,6 +118,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis !important;
-    max-width: 182px !important;
+    max-width: 170px !important;
   }
 </style>
