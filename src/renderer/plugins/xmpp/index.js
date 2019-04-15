@@ -4,6 +4,23 @@ function Xmpp(Vue, store) {
   const xmpp = this;
   let client;
 
+  const log = (name, data) => {
+    if (name.search('raw:') === 0) {
+      return;
+    }
+
+    let message;
+    if (typeof data === 'string') {
+      message = data;
+    } else {
+      message = JSON.stringify(data, null, '  ');
+    }
+
+    if (undefined !== console) {
+      console.log(name, message);
+    }
+  };
+
   this.addMessage = (contactJid, message, timestamp, skipActive) => {
     contactJid = contactJid.toString();
     contactJid = contactJid.replace(/\/.+$/, '');
@@ -39,6 +56,10 @@ function Xmpp(Vue, store) {
       wsURL: url,
       boshURL: url,
     });
+
+    if (undefined !== console) {
+      client.on('*', log);
+    }
 
     client.on('session:started', () => {
       store.state.xmpp.status = 'connected';
