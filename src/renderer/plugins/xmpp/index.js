@@ -90,6 +90,7 @@ function Xmpp(Vue, store) {
     client.on('message', (data) => {
       if (data.body !== undefined) {
         xmpp.addMessage(data.from, data, new Date());
+        store.state.xmpp.lastMessage = data;
       }
     });
 

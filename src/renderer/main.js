@@ -31,6 +31,7 @@ const store = new Vuex.Store({
         version: process.env.npm_package_version,
         os: require('os').release(),
       },
+      lastMessage: {},
     },
   },
 });
@@ -47,6 +48,35 @@ const v = new Vue({
   router,
   store,
   template: '<App/>',
+  data() {
+    return {
+      message: {},
+    };
+  },
+  watch: {
+    lastMessage(data) {
+      if (undefined !== data && this.message.id !== data.id) {
+        this.message = data;
+
+        let contactJid = data.from.toString();
+        contactJid = contactJid.replace(/\/.+$/, '');
+
+        const messageNotification = new Notification(contactJid, {
+          body: data.body,
+        });
+        messageNotification.onclick = () => {
+          this.openContact(contactJid);
+          messageNotification.close();
+        };
+        messageNotification.show();
+      }
+    }
+  },
+  computed: {
+    lastMessage() {
+      return this.$store.state.xmpp.lastMessage;
+    }
+  },
 }).$mount('#app');
 
 if (v.$db.getConfig('jid')
