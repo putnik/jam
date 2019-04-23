@@ -21,16 +21,12 @@ const store = new Vuex.Store({
     xmpp: {
       jid: '',
       password: '',
+      locale: 'en',
       status: 'disconnected',
       roster: [],
       contactJid: null,
       messages: {},
       activeMessages: {},
-      software: {
-        name: process.env.npm_package_name,
-        version: process.env.npm_package_version,
-        os: require('os').release(),
-      },
       lastMessage: {},
     },
   },
@@ -84,12 +80,14 @@ if (v.$db.getConfig('jid')
   && v.$db.getConfig('transport')
   && v.$db.getConfig('url')
 ) {
-  v.$xmpp.connect(
-    v.$db.getConfig('jid'),
-    v.$db.getConfig('password'),
-    v.$db.getConfig('transport'),
-    v.$db.getConfig('url'),
-  );
+  const options = {
+    jid: v.$db.getConfig('jid'),
+    password: v.$db.getConfig('password'),
+    transport: v.$db.getConfig('transport'),
+    url: v.$db.getConfig('url'),
+  };
+
+  v.$xmpp.connect(options);
 } else {
   v.$router.push({
     name: 'settings',

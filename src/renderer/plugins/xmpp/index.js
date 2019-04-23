@@ -46,15 +46,29 @@ function Xmpp(Vue, store) {
     }
   };
 
-  this.connect = (jid, password, transport, url) => {
-    client = stanza.createClient({
-      softwareVersion: store.state.xmpp.software,
-      jid,
-      password,
+  this.connect = (options) => {
+    if (undefined !== client) {
+      client.disconnect();
+    }
 
-      transport,
-      wsURL: url,
-      boshURL: url,
+    client = stanza.createClient({
+      capsNode: 'http://jam.putnik.tech/caps',
+      lang: store.state.xmpp.locale,
+      softwareVersion: {
+        name: process.env.npm_package_name,
+        version: process.env.npm_package_version,
+        os: require('os').release(),
+      },
+      timeout: 60,
+      useStreamManagement: true,
+
+
+      jid: options.jid,
+      password: options.password,
+
+      transport: options.transport,
+      boshURL: options.url,
+      wsURL: options.url,
     });
 
     if (undefined !== console) {
@@ -63,11 +77,15 @@ function Xmpp(Vue, store) {
 
     client.on('session:started', () => {
       store.state.xmpp.status = 'connected';
-      store.state.xmpp.jid = jid;
-      store.state.xmpp.password = password;
-      store.state.xmpp.transport = transport;
-      store.state.xmpp.url = url;
+      store.state.xmpp.jid = options.jid;
+      store.state.xmpp.password = options.password;
+      store.state.xmpp.transport = options.transport;
+      store.state.xmpp.url = options.url;
 
+      client.enableKeepAlive({
+        interval: 25,
+        timeout: 15,
+      });
       client.getRoster(() => {
         client.updateCaps();
         client.sendPresence({
