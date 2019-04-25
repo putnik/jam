@@ -74,6 +74,7 @@ function Xmpp(Vue, store) {
       jid: options.jid,
       password: options.password,
 
+      resource: options.resource,
       transport: options.transport,
       boshURL: options.url,
       wsURL: options.url,
