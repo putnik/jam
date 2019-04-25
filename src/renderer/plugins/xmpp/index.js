@@ -1,3 +1,4 @@
+const os = require('os');
 const stanza = require('stanza');
 
 function Xmpp(Vue, store) {
@@ -13,7 +14,11 @@ function Xmpp(Vue, store) {
     if (typeof data === 'string') {
       message = data;
     } else {
-      message = JSON.stringify(data, null, '  ');
+      try {
+        message = JSON.stringify(data, null, '  ');
+      } catch {
+        message = data;
+      }
     }
 
     if (undefined !== console) {
@@ -57,7 +62,10 @@ function Xmpp(Vue, store) {
       softwareVersion: {
         name: process.env.npm_package_name,
         version: process.env.npm_package_version,
-        os: require('os').release(),
+
+        // TODO: MUST provide a way to disable sharing of information about the OS:
+        //       https://xmpp.org/extensions/xep-0092.html#security
+        os: os.platform() + ' ' + os.release(),
       },
       timeout: 60,
       useStreamManagement: true,

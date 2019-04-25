@@ -33,8 +33,8 @@ function DB() {
     });
   };
 
-  this.getConfig = (key) => {
-    let value = null;
+  this.getConfig = (key, defaultValue) => {
+    let value = defaultValue || null;
     db.getRows('configs', { key }, (success, result) => {
       if (success && result.length) {
         [{ value }] = result;

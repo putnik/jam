@@ -92,7 +92,18 @@ export default {
       this.$db.setConfig('ssl', this.ssl);
       this.$db.setConfig('url', this.url);
 
-      this.$xmpp.connect(this.jid, this.password, this.transport, this.url);
+      const resource = process.env.npm_package_name + '-' + Math.random().toString(36).substring(2, 8);
+      this.$db.setConfig('resource', resource);
+
+      const options = {
+        jid: this.jid,
+        password: this.password,
+        transport: this.transport,
+        url: this.url,
+        resource,
+      };
+
+      this.$xmpp.connect(options);
       this.close();
     },
     handleCancel() {

@@ -85,6 +85,7 @@ if (v.$db.getConfig('jid')
     password: v.$db.getConfig('password'),
     transport: v.$db.getConfig('transport'),
     url: v.$db.getConfig('url'),
+    resource: v.$db.getConfig('resource'),
   };
 
   v.$xmpp.connect(options);
