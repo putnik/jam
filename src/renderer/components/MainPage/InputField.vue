@@ -2,8 +2,8 @@
   <form class="ui form inputfield-wrapper" @submit="handleSubmit">
     <div class="ui fluid action input">
       <input type="text" v-model="message" @keyup.13.native="handleSubmit"
-             placeholder="Please enter your message">
-      <div class="ui button primary" :disabled="isDisabled">Send</div>
+             placeholder="Please enter your message" :disabled="isDisabled">
+      <button class="ui button primary" :disabled="isDisabled">Send</button>
     </div>
   </form>
 </template>
